@@ -95,7 +95,7 @@ def full_chain():
     return jsonify(response), 200
 
 
-@app.route('/last_block', methods=['POST'])
+@app.route('/last_block', methods=['GET'])
 def last_block():
     return jsonify(blockchain.last_block), 200
 
