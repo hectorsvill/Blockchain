@@ -11,7 +11,7 @@ class Blockchain(object):
         self.chain = []
         self.current_transactions = []
         # Create the genesis block
-        self.new_block(previous_hash=1, proof=100)
+        self.new_block(proof=100, previous_hash=1)
 
     def new_block(self, proof, previous_hash=None):
         """
@@ -41,7 +41,7 @@ class Blockchain(object):
         return block
 
 
-    def hash(block):
+    def hash(self, block):
         """
         Creates a SHA-256 hash of a Block
         :param block": <dict> Block
@@ -121,7 +121,7 @@ blockchain = Blockchain()
 @app.route('/mine', methods=['GET'])
 def mine():
     # Run the proof of work algorithm to get the next proof
-    proof = blockchain.proof_of_work()
+    proof = blockchain.proof_of_work(Blockchain.last_block)
     # Forge the new Block by adding it to the chain with the proof
     previous_hash = blockchain.hash(blockchain.last_block)
     block = blockchain.new_block(proof, previous_hash)
@@ -140,7 +140,8 @@ def mine():
 @app.route('/chain', methods=['GET'])
 def full_chain():
     response = {
-        # TODO: Return the chain and its current length
+        'length': len(blockchain.chain),
+        'chain': blockchain.chain,
     }
     return jsonify(response), 200
 
