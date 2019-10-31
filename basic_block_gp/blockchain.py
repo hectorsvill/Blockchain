@@ -26,15 +26,20 @@ class Blockchain(object):
         :param previous_hash: (Optional) <str> Hash of previous Block
         :return: <dict> New Block
         """
-
         block = {
-            # TODO
+            'index': len(self.chain) + 1,
+            'timestamp': time()
+            'transactions': self.current_transactions
+            'proof': proof
+            'previous_hash': previous_hash or self.hash(self.chain[-1])
         }
-
         # Reset the current list of transactions
+        self.current_transactions = []
         # Append the chain to the block
+        self.chain.append(block)
         # Return the new block
-        pass
+        return block
+
 
     def hash(block):
         """
@@ -52,9 +57,11 @@ class Blockchain(object):
         # or we'll have inconsistent hashes
 
         # TODO: Create the block_string
-
+        string_object = json.dumps(block, sort_keys=True)
+        block_string = string_object.encode()
         # TODO: Hash this string using sha256
-
+        raw_hash = hashlib.sha256(block_string)
+        hex_hash = raw_hash.hexdigest()
         # By itself, the sha256 function returns the hash in a raw string
         # that will likely include escaped characters.
         # This can be hard to read, but .hexdigest() converts the
@@ -62,7 +69,7 @@ class Blockchain(object):
         # easier to work with and understand
 
         # TODO: Return the hashed block string in hexadecimal format
-        pass
+        return hex_hash
 
     @property
     def last_block(self):
@@ -78,7 +85,7 @@ class Blockchain(object):
         """
         # TODO
         # Proof is a SHA256 hash with 3 leading zeroes
-        
+
         pass
         # return proof
 
@@ -128,6 +135,12 @@ def full_chain():
         # TODO: Return the chain and its current length
     }
     return jsonify(response), 200
+
+
+@app.route('/', methods=['GET'])
+def home():
+    return "<h1>BlockChain</h1>", 200
+
 
 
 # Run the program on port 5000
