@@ -13,14 +13,15 @@ def proof_of_work(block):
     in an effort to find a number that is a valid proof
     :return: A valid proof for the provided block
     """
-
-    # Proof is a SHA256 hash with 3 leading zeroes
+    # TODO: Make this work for miner
+    # One line version of code to stringify a block
     block_string = json.dumps(block, sort_keys=True)
     proof = 0
-    while not valid_proof(block_string, proof):
+    while valid_proof(block_string, proof) is False:
         proof += 1
-    return proof      
 
+    return proof
+		
 
 def valid_proof(block_string, proof):
     """
@@ -35,7 +36,7 @@ def valid_proof(block_string, proof):
     """
     guess = f'{block_string}{proof}'.encode()
     guess_hash = hashlib.sha256(guess).hexdigest()
-    return guess_hash[:3] == "000"
+    return guess_hash[:5] == "00000"
 
 
 if __name__ == '__main__':
@@ -50,6 +51,8 @@ if __name__ == '__main__':
     id = f.read()
     print("ID is", id)
     f.close()
+
+    coins_mined = 0
 
     # Run forever until interrupted
     while True:
@@ -68,7 +71,7 @@ if __name__ == '__main__':
 
         # When found, POST it to the server {"proof": new_proof, "id": id}
         post_data = {"proof": new_proof, "id": id}
-        
+
         r = requests.post(url=node + "/mine", json=post_data)
         print(r)
         data = r.json()
@@ -81,3 +84,6 @@ if __name__ == '__main__':
             print("Total coins mined: " + str(coins_mined))
         else:
             print(data.get('message'))
+
+
+
