@@ -49,7 +49,7 @@ class Blockchain(object):
     def valid_proof(block_string, proof):
         guess = f'{block_string}{proof}'.encode()
         guess_hash = hashlib.sha256(guess).hexdigest()
-        return guess_hash[:5] == "00000"
+        return guess_hash[:6] == "000000"
 
 
 # Instantiate our Node
@@ -109,8 +109,6 @@ def last_block():
         'last_block': blockchain.last_block
     }
     return jsonify(response), 200
-
-
 
 # Run the program on port 5000
 if __name__ == '__main__':
