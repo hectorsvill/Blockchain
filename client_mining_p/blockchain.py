@@ -45,7 +45,7 @@ class Blockchain(object):
     def valid_proof(block_string, proof):
         guess = f'{block_string}{proof}'.encode()
         guess_hash = hashlib.sha256(guess).hexdigest()
-        return guess_hash[:6] == "000000"
+        return guess_hash[:3] == "000"
 
 
 app = Flask(__name__)
